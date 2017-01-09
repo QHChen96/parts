@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc //打开SpringMVC
 @ComponentScan("com.chenqinhao.parts.web")
 public class WebConfig extends WebMvcConfigurerAdapter {
+
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -23,6 +25,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         viewResolver.setSuffix(".jsp"); //后缀
         viewResolver.setExposeContextBeansAsAttributes(true);//可以在JSP页面中通过${}访问beans
         return viewResolver;
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/websocket").setViewName("websocket");
     }
 
     @Override

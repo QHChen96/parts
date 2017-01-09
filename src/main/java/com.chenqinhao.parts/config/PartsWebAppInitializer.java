@@ -29,4 +29,9 @@ public class PartsWebAppInitializer extends AbstractAnnotationConfigDispatcherSe
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
+    @Override
+    protected boolean isAsyncSupported() {
+        return true;
+    }
 }
