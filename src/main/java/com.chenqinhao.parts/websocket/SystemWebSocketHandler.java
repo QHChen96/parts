@@ -7,26 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/1/9.
  */
 @Component("systemWebSocketHandler")
-public class SystemWebSocketHandler implements WebSocketHandler{
+public class SystemWebSocketHandler implements WebSocketHandler {
     private static final Logger logger = LoggerFactory.getLogger(SystemWebSocketHandler.class);
+    private static Map<String, WebSocketSession> client = new HashMap<>();
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws Exception {
-        logger.debug("connect to the websocket success...");
-        webSocketSession.sendMessage(new TextMessage("OK"));
+        logger.debug("connectd..." + webSocketSession.getId());
+        client.put(webSocketSession.getId(), webSocketSession);
     }
 
     @Override
     public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) throws Exception {
-        logger.debug("message:" + webSocketMessage.toString());
-        for (int i = 0; i < 10; i++){
-            webSocketSession.sendMessage(new TextMessage(0+""));
-            Thread.sleep(2000);
-        }
+        logger.debug(webSocketMessage.toString());
+        WebSocketSession session = client.get((String)webSocketMessage.getPayload());
+        System.out.println(webSocketMessage.toString());
+        String message =webSocketSession.getId() + "发送消息:" + (String)webSocketMessage.getPayload() + " 给" + session.getId();
+        session.sendMessage(new TextMessage(message));
     }
 
     @Override

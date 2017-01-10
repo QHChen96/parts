@@ -11,36 +11,39 @@
     <title>Title</title>
 </head>
 <body>
+<p id="show">...</p>
 <input id="message" type="text"/>
 <input id="send" type="button" value="发送"/>
 <script src="//cdn.bootcss.com/sockjs-client/1.1.1/sockjs.min.js"></script>
 <script>
     var websocket;
     var message = document.getElementById("message");
-    message.value = "赋值";
     var send = document.getElementById("send");
+    var show = document.getElementById("show");
     if('WebSocket' in window) {
+        console.log('websocket');
         websocket = new WebSocket("ws://localhost:8888/webSocketServer");
     } else if('MozWebSocket' in window) {
         websocket = new MozWebSocket("ws://localhost:8888/webSocketServer");
     } else {
-        websocket = new SockJS("ws://localhost:8888/sockjs/webSocketServer");
+        websocket = new SockJS("http://localhost:8888/sockjs/webSocketServer");
     }
-    websocket.onopen(function (event) {
+    websocket.onopen = function () {
         console.log("open...");
-    });
-    websocket.onmessage(function (event) {
-        message.value = event.data;
-    });
+    };
+    websocket.onmessage = function (event) {
+        console.log(event);
+        show.innerText = event.data;
+    };
     websocket.onerror = function (event) {
         console.log("error...");
     };
     websocket.onclose = function (event) {
         console.log("close...");
     }
-    send.onclick(function () {
-        websocket.send("Hello webSocket");
-    });
+    send.onclick = function () {
+        websocket.send(message.value);
+    };
 </script>
 </body>
 </html>
